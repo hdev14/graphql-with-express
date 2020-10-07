@@ -67,7 +67,7 @@ const RootSchema = new GraphQLSchema({
         type: BookType,
         description: 'A single book',
         args: {
-          id: { type: GraphQLInt }
+          id: { type: GraphQLNonNull(GraphQLInt) }
         },
         resolve: (_, { id }) => {
           return books.find(b => b.id === id)
@@ -78,7 +78,16 @@ const RootSchema = new GraphQLSchema({
         description: 'All authors',
         resolve: () => authors
       },
-
+      author: {
+        type: AuthorType,
+        description: 'A single author',
+        args: {
+          id: { type: GraphQLNonNull(GraphQLInt) }
+        },
+        resolve: (_, { id }) => {
+          return authors.find(a => a.id === id)
+        }
+      }
     })
   })
 })
