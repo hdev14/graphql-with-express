@@ -46,7 +46,7 @@ const AuthorType = new GraphQLObjectType({
     id: { type: GraphQLNonNull(GraphQLInt) },
     name: { type: GraphQLNonNull(GraphQLString) },
     books: {
-      type: new GraphQLList(BookType),
+      type: GraphQLList(BookType),
       resolve: (parent) => {
         return books.filter(b => b.authorId === parent.id)
       }
@@ -59,15 +59,26 @@ const RootSchema = new GraphQLSchema({
     name: 'Root',
     fields: () => ({
       books: {
-        type: new GraphQLList(BookType),
+        type: GraphQLList(BookType),
         description: 'All Books',
         resolve: () => books
       },
+      book: {
+        type: BookType,
+        description: 'A single book',
+        args: {
+          id: { type: GraphQLInt }
+        },
+        resolve: (_, { id }) => {
+          return books.find(b => b.id === id)
+        }
+      },
       authors: {
-        type: new GraphQLList(AuthorType),
+        type: GraphQLList(AuthorType),
         description: 'All authors',
         resolve: () => authors
-      }
+      },
+
     })
   })
 })
